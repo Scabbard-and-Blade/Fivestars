@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Five Stars Challenge | Scabbard and Blade JROTC</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#171A14; --panel:#22271D; --panel2:#2B3124; --line:#3E4634;
+  --tan:#C2A878; --ranger:#6B7D4F; --text:#E4DFD0; --dim:#A5A18F; --orange:#E07A2E;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --cond:"Oswald","Arial Narrow","Roboto Condensed","Helvetica Neue",Arial,sans-serif;
+  box-sizing:border-box;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{background:var(--bg);scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+html,body{margin:0}
+body{
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'%3E%3Cg fill='none' stroke='%23C2A878' stroke-opacity='.07' stroke-width='1.2'%3E%3Cpath d='M-20 80 C 90 20 180 140 300 90 S 520 30 620 110'/%3E%3Cpath d='M-20 120 C 100 60 190 180 300 130 S 510 70 620 150'/%3E%3Cpath d='M-20 160 C 110 100 200 220 300 170 S 500 110 620 190'/%3E%3Cpath d='M-20 330 C 80 280 160 400 280 350 S 500 290 620 360'/%3E%3Cpath d='M-20 370 C 90 320 170 440 280 390 S 490 330 620 400'/%3E%3Cpath d='M-20 410 C 100 360 180 480 280 430 S 480 370 620 440'/%3E%3Cpath d='M-20 450 C 110 400 190 520 280 470 S 470 410 620 480'/%3E%3Cellipse cx='460' cy='250' rx='70' ry='34'/%3E%3Cellipse cx='460' cy='250' rx='44' ry='20'/%3E%3Cellipse cx='460' cy='250' rx='18' ry='8'/%3E%3Cellipse cx='120' cy='560' rx='90' ry='36'/%3E%3Cellipse cx='120' cy='560' rx='56' ry='20'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(rgba(194,168,120,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(194,168,120,.045) 1px,transparent 1px);
+  background-size:600px 600px,40px 40px,40px 40px;
+  color:var(--text);font:16px/1.55 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+.cond{font-family:var(--cond);font-stretch:condensed}
+.mono{font-family:var(--mono)}
+a{color:var(--tan)}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:rgba(18,21,15,.94);border-bottom:2px solid var(--tan);
+  padding-top:env(safe-area-inset-top,0px);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.top .wrap{display:flex;align-items:center;gap:14px;min-height:54px}
+.brand{font-family:var(--cond);font-stretch:condensed;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--tan);text-decoration:none;white-space:nowrap}
+.top nav{display:flex;gap:2px;overflow-x:auto;margin-left:auto;scrollbar-width:none}
+.top nav a{font-family:var(--cond);font-stretch:condensed;text-decoration:none;color:var(--dim);padding:6px 10px;white-space:nowrap;border:1px solid transparent}
+.top nav a:hover{color:var(--text);border-color:var(--line)}
+@media (max-width:600px){.top .wrap{flex-wrap:wrap;gap:0;padding-top:6px}.top nav{margin-left:-10px;width:calc(100% + 20px)}}
+
+/* hero */
+.hero{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.readout{font-family:var(--mono);font-size:.78rem;color:var(--ranger);letter-spacing:.02em}
+.hero h1{font-family:var(--cond);font-stretch:condensed;font-size:clamp(2.4rem,7vw,4.2rem);line-height:1;margin:10px 0 14px;text-transform:uppercase;letter-spacing:.05em;color:var(--tan)}
+.hero p{max-width:62ch;color:var(--text);font-size:1.05rem}
+.starrow{display:flex;gap:10px;margin:22px 0 26px}
+.starrow svg{width:34px;height:34px;fill:none;stroke:var(--tan);stroke-width:1.4}
+.starrow svg.done{fill:var(--tan)}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-block;cursor:pointer;text-decoration:none;font-weight:600;border:1px solid var(--tan);background:var(--tan);color:var(--bg);padding:10px 18px;border-radius:2px}
+.btn.ghost{background:transparent;color:var(--tan)}
+.btn:disabled{cursor:not-allowed;opacity:.55}
+.btn.sm{padding:6px 12px;font-size:.88rem}
+
+section.block{padding:48px 0;border-bottom:1px solid var(--line)}
+h2{font-family:var(--cond);font-stretch:condensed;font-size:2rem;line-height:1.1;margin:6px 0 8px;letter-spacing:.02em}
+h3{font-family:var(--cond);font-stretch:condensed;font-size:1.4rem;margin:0 0 6px;letter-spacing:.02em}
+h4{font-family:var(--cond);font-stretch:condensed;font-size:1.15rem;margin:18px 0 8px;color:var(--tan);letter-spacing:.02em}
+.lead{color:var(--dim);max-width:66ch;margin:0 0 20px}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:22px}
+.how div{background:var(--panel);border-left:3px solid var(--ranger);padding:12px 14px}
+.how b{display:block;font-family:var(--mono);font-size:.78rem;color:var(--tan)}
+
+/* stars */
+.stars{display:flex;flex-direction:column;gap:10px}
+.star{background:var(--panel);border:1px solid var(--line)}
+.star.open{border-color:var(--tan)}
+.shead{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;background:transparent;border:0;padding:14px 16px}
+.shead svg{flex:none;width:38px;height:38px;fill:none;stroke:var(--tan);stroke-width:1.3}
+.star.open .shead svg{fill:var(--tan)}
+.shead .st{flex:1}
+.shead .k{display:block;font-family:var(--mono);font-size:.74rem;color:var(--dim)}
+.shead .n{display:block;font-family:var(--cond);font-stretch:condensed;font-size:1.5rem;line-height:1.1}
+.shead .chev{font-family:var(--mono);color:var(--tan)}
+.sbody{padding:0 16px 18px}
+.sbody[hidden]{display:none}
+.task{background:var(--bg);border-left:3px solid var(--orange);padding:10px 14px;margin:4px 0 16px;max-width:72ch}
+.task b{font-family:var(--mono);font-size:.76rem;color:var(--orange);display:block}
+.vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.vframe{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--line);overflow:hidden}
+.vframe iframe,.vframe img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
+.vframe button{position:absolute;inset:0;cursor:pointer;border:0;background:transparent;padding:0}
+.vframe .play{position:absolute;left:50%;top:50%;width:64px;height:44px;transform:translate(-50%,-50%);background:rgba(18,21,15,.85);border:1px solid var(--tan)}
+.vframe .play::after{content:"";position:absolute;left:26px;top:12px;border-left:16px solid var(--tan);border-top:10px solid transparent;border-bottom:10px solid transparent}
+.vframe button:hover .play{background:var(--orange);border-color:var(--orange)}
+.vframe button:hover .play::after{border-left-color:var(--bg)}
+.vmeta{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;margin-top:6px}
+.vmeta span{font-weight:600}
+.vmeta a{font-size:.82rem;white-space:nowrap}
+.submit{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:18px;padding-top:14px;border-top:1px dashed var(--line)}
+.submit small{color:var(--dim)}
+
+/* pathfinder */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:6px 0 18px}
+.steps button{cursor:pointer;background:var(--panel);border:1px solid var(--line);padding:10px 6px;text-align:left}
+.steps button .k{display:block;font-family:var(--mono);font-size:.7rem;color:var(--dim)}
+.steps button .n{display:block;font-family:var(--cond);font-stretch:condensed;font-size:1.05rem;line-height:1.15}
+.steps button.done .k::after{content:" ✓";color:var(--ranger)}
+.steps button[aria-selected="true"]{background:var(--tan);color:var(--bg);border-color:var(--tan)}
+.steps button[aria-selected="true"] .k{color:var(--bg)}
+@media (max-width:640px){.steps{grid-template-columns:repeat(5,minmax(96px,1fr));overflow-x:auto}}
+.panel[hidden]{display:none}
+.card{background:var(--panel);border:1px solid var(--line);padding:16px;margin-bottom:14px}
+.qlabel{font-family:var(--mono);font-size:.78rem;color:var(--tan);margin:0 0 8px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.opt{cursor:pointer;text-align:left;background:var(--bg);border:1px solid var(--line);padding:12px 14px}
+.opt b{display:block;font-family:var(--cond);font-stretch:condensed;font-size:1.15rem}
+.opt span{display:block;font-size:.88rem;color:var(--dim)}
+.opt[aria-pressed="true"]{border-color:var(--tan);box-shadow:inset 4px 0 0 var(--tan)}
+.nextrow{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
+.fine{font-size:.82rem;color:var(--dim);max-width:72ch}
+
+/* timeline */
+.yrs{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.yrs input[type=range]{flex:1;min-width:200px;accent-color:var(--tan)}
+.yrs output{font-family:var(--mono);font-size:1.3rem;color:var(--tan);min-width:5.5em}
+.tl{position:relative;height:58px;margin:18px 6px 6px}
+.tl .track{position:absolute;left:0;right:0;top:26px;height:6px;background:var(--line)}
+.tl .fill{position:absolute;left:0;top:26px;height:6px;background:var(--tan)}
+.tl .mk{position:absolute;top:0;transform:translateX(-50%);text-align:center;font-family:var(--mono);font-size:.72rem;color:var(--dim)}
+.tl .mk::after{content:"";display:block;width:10px;height:10px;margin:6px auto 0;border:2px solid var(--dim);background:var(--bg);transform:rotate(45deg)}
+.tl .mk.on{color:var(--tan)} .tl .mk.on::after{border-color:var(--tan);background:var(--tan)}
+.tl .mk.ret{color:var(--orange)} .tl .mk.ret::after{border-color:var(--orange)}
+.mlist{list-style:none;padding:0;margin:10px 0 0}
+.mlist li{display:flex;gap:10px;padding:7px 0;border-top:1px dashed var(--line);color:var(--dim)}
+.mlist li b{font-family:var(--mono);min-width:3.4em;color:var(--dim)}
+.mlist li.on{color:var(--text)} .mlist li.on b{color:var(--tan)}
+
+/* branch explorer */
+.bx{display:grid;grid-template-columns:290px 1fr;gap:16px;align-items:start}
+.bmenu{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);max-height:calc(100vh - 90px);display:flex;flex-direction:column}
+.bmhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.bmhead .mono{font-size:.8rem;color:var(--tan)}
+.sort{cursor:pointer;font-family:var(--mono);font-size:.78rem;border:1px solid var(--tan);background:transparent;color:var(--tan);padding:4px 9px;border-radius:2px}
+.search{width:100%;font:inherit;font-family:var(--mono);font-size:.9rem;padding:9px 11px;border:1px solid var(--line);border-radius:2px;background:var(--bg);color:var(--text);margin-bottom:10px}
+.search::placeholder{color:var(--dim)}
+.blist{display:flex;flex-direction:column;gap:8px;overflow-y:auto;padding-right:4px}
+.br{flex:none;position:relative;width:100%;text-align:left;cursor:pointer;background:var(--bg);border:1px solid var(--line);padding:11px 12px 11px 20px;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.br::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(to bottom,var(--c1) 0 50%,var(--c2) 50% 100%);box-shadow:1px 0 0 rgba(228,223,208,.25)}
+.br .name{display:block;font-family:var(--cond);font-stretch:condensed;font-weight:700;font-size:1.08rem;line-height:1.15}
+.br .code{display:block;font-family:var(--mono);font-size:.74rem;color:var(--tan);margin-top:3px}
+.br .tag{display:inline-block;margin-top:6px;font-size:.72rem;border:1px solid var(--orange);color:var(--orange);padding:0 6px}
+.br .pick{position:absolute;right:16px;top:10px;font-family:var(--mono);font-size:.7rem;color:var(--orange)}
+.br[aria-current="true"]{background:var(--panel2);border-color:var(--tan)}
+.bph{border:1px dashed var(--line);padding:26px 18px;text-align:center;color:var(--dim)}
+.bdet{background:var(--bg);border:1px solid var(--tan);position:relative}
+.bdet[hidden],.bph[hidden]{display:none}
+.bdet::before,.bdet::after{content:"";position:absolute;width:16px;height:16px;border:solid var(--orange)}
+.bdet::before{top:-4px;left:-4px;border-width:2px 0 0 2px}
+.bdet::after{bottom:-4px;right:-4px;border-width:0 2px 2px 0}
+.dhead{display:flex;border-bottom:1px solid var(--line);background:rgba(0,0,0,.25)}
+.dhead .stripe{width:10px;flex:none;background:linear-gradient(to bottom,var(--c1) 0 50%,var(--c2) 50% 100%);box-shadow:1px 0 0 rgba(228,223,208,.25)}
+.dhead .t{padding:12px 14px;flex:1}
+.dhead h3{margin:0;font-size:1.7rem;line-height:1.05;color:var(--tan);text-transform:uppercase;letter-spacing:.04em}
+.dhead .sub{font-family:var(--mono);font-size:.8rem;color:var(--dim)}
+.dbody{padding:4px 16px 16px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin:12px 0}
+.fact{background:var(--panel);border-left:3px solid var(--ranger);padding:9px 11px;font-size:.9rem}
+.fact b{display:block;font-family:var(--mono);font-weight:600;font-size:.72rem;color:var(--tan);margin-bottom:2px}
+.aoc{display:flex;gap:12px;align-items:flex-start;border-top:1px dashed var(--line);padding:11px 0}
+.aoc .ac{flex:1}
+.aoc .ac b{display:block}
+.aoc .ac b span{display:inline-block;min-width:3.3em;border:1px solid var(--tan);color:var(--tan);font-family:var(--mono);font-size:.85rem;padding:0 6px;margin-right:8px;text-align:center}
+.aoc p{margin:4px 0 0;font-size:.92rem;color:var(--dim)}
+.selrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 0 4px;border-top:1px solid var(--line);margin-top:6px}
+@media (max-width:760px){
+  .bx{grid-template-columns:1fr}
+  .bmenu{position:static;max-height:none}
+  .blist{overflow:visible;gap:10px;padding-right:0}
+  .br{padding:14px 16px 14px 22px}
+  .bph{display:none}
+}
+
+/* schools */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.txt{width:100%;font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:2px;background:var(--bg);color:var(--text)}
+.txt::placeholder{color:var(--dim)}
+.weights{display:grid;gap:10px}
+.weights label{display:grid;grid-template-columns:1fr 130px 2em;gap:10px;align-items:center;font-size:.92rem}
+.weights input{accent-color:var(--tan);width:100%}
+.weights output{font-family:var(--mono);color:var(--tan);text-align:right}
+@media (max-width:480px){.weights label{grid-template-columns:1fr 2em}.weights input{grid-column:1/-1;grid-row:2}}
+.rate{display:flex;flex-direction:column;gap:10px}
+.rrow{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:.9rem}
+.seg{display:flex;gap:3px}
+.seg button{cursor:pointer;width:34px;height:32px;background:var(--bg);border:1px solid var(--line);font-family:var(--mono);font-size:.85rem}
+.seg button[aria-pressed="true"]{background:var(--tan);color:var(--bg);border-color:var(--tan)}
+.results{display:flex;flex-direction:column;gap:10px}
+.res{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;background:var(--bg);border:1px solid var(--line);padding:10px 12px}
+.res.top{border-color:var(--tan)}
+.res .bar{grid-column:1/-1;height:8px;background:var(--line)}
+.res .bar i{display:block;height:100%;background:var(--tan)}
+.res .sc{font-family:var(--mono);color:var(--tan)}
+
+/* majors */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{cursor:pointer;background:var(--bg);border:1px solid var(--line);padding:8px 12px;font-size:.92rem}
+.chip[aria-pressed="true"]{background:var(--tan);color:var(--bg);border-color:var(--tan)}
+.chip.link{border-color:var(--ranger);color:var(--text)}
+.chip.link::after{content:" →";color:var(--tan)}
+.ladder{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+
+/* plan */
+.summary{display:grid;gap:8px}
+.srow{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:start;background:var(--bg);border:1px solid var(--line);padding:10px 12px}
+.srow .no{font-family:var(--mono);color:var(--tan)}
+.srow .lbl{display:block;font-family:var(--mono);font-size:.72rem;color:var(--dim)}
+.srow .val{display:block}
+.srow .val.miss{color:var(--orange);font-style:italic}
+.srow button{cursor:pointer;background:transparent;border:1px solid var(--line);font-size:.8rem;padding:3px 9px}
+.refl{display:grid;gap:12px}
+.refl label{display:block;font-size:.92rem;margin-bottom:4px}
+textarea.txt{min-height:84px;resize:vertical}
+#outline{min-height:260px;font-family:var(--mono);font-size:.85rem;line-height:1.5}
+.status{font-family:var(--mono);font-size:.8rem;color:var(--ranger);min-height:1.2em}
+
+footer{padding:32px 0 48px;color:var(--dim);font-size:.85rem}
+footer .mono{color:var(--ranger)}
+@media print{
+  body{background:#fff;color:#000}
+  .top,.hero,#stars,.steps,.panel:not(#p5),.nextrow,.noprint,footer{display:none!important}
+  #p5{display:block!important}
+  .card{border:0;background:#fff}
+  #outline{border:0;color:#000;background:#fff;min-height:0;height:auto}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#overview">Scabbard &amp; Blade // Five Stars</a>
+    <nav aria-label="Site sections">
+      <a href="#overview">Overview</a><a href="#stars">Five Stars</a><a href="#pathfinder">Pathfinder</a><a href="#pathfinder" data-go="5">My Plan</a>
+    </nav>
+  </div>
+</header>
+
+<noscript><div style="background:#E07A2E;color:#171A14;padding:12px 16px;font-weight:600;text-align:center">This page needs JavaScript to work. If you opened it from a file preview, open it in Safari or Chrome instead.</div></noscript>
+<main>
+<section class="hero" id="overview">
+  <div class="wrap">
+    <div class="readout">NATIONAL SOCIETY OF SCABBARD AND BLADE // JROTC PROGRAM</div>
+    <h1>Five Stars Challenge</h1>
+    <p>The Society's five stars are its five pillars: Honor, Leadership, Professionalism, Officership, and Unity. Complete a challenge for each star to earn a recognition award, then chart your future with the Five Stars Pathfinder Award.</p>
+    <div class="starrow" aria-hidden="true" id="starrow"></div>
+    <div class="cta">
+      <a class="btn" href="#stars">Start the challenge</a>
+      <a class="btn ghost" href="#pathfinder">Pathfinder Award</a>
+    </div>
+    <div class="how">
+      <div><b>01 // WATCH</b>Review the two videos for each star.</div>
+      <div><b>02 // DO</b>Complete the star's project: a paper, video, event, or interview.</div>
+      <div><b>03 // SUBMIT</b>Send your project to the national office. Once approved, you receive that star's award.</div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="stars">
+  <div class="wrap">
+    <div class="readout">PHASE I</div>
+    <h2>The Five Stars</h2>
+    <p class="lead">The program builds leadership, service, loyalty, self-confidence, and professional competence. Open a star to see its videos and project.</p>
+    <div class="stars" id="starList"></div>
+  </div>
+</section>
+
+<section class="block" id="pathfinder">
+  <div class="wrap">
+    <div class="readout">PHASE II // AFTER ALL FIVE STARS</div>
+    <h2>Five Stars Pathfinder Award</h2>
+    <p class="lead">Earn the Pathfinder Award by writing a paper on your personal military career goals. Work through the four planning tools below. Your choices are compiled into an outline for your paper in step 5.</p>
+    <div class="steps" role="tablist" aria-label="Pathfinder steps" id="steps"></div>
+
+    <!-- STEP 1 -->
+    <div class="panel" id="p1" role="tabpanel">
+      <h3>1. Initial goal for military service</h3>
+      <p class="lead">Decide how long you plan to serve and in what component. Move the slider to see where a typical officer career would take you.</p>
+      <div class="card">
+        <p class="qlabel">MY SERVICE GOAL</p>
+        <div class="opts" data-key="goal">
+          <button class="opt" data-v="Serve my initial commitment"><b>Initial commitment</b><span>Complete my required service, then decide on next steps.</span></button>
+          <button class="opt" data-v="Serve a mid-length career of about 10 years"><b>About 10 years</b><span>Lead as a lieutenant and captain, gain experience, then transition.</span></button>
+          <button class="opt" data-v="Serve a full career of 20 or more years and retire"><b>20+ years</b><span>Make the Army a career and serve to retirement.</span></button>
+        </div>
+      </div>
+      <div class="card">
+        <p class="qlabel">COMPONENT</p>
+        <div class="opts" data-key="component">
+          <button class="opt" data-v="Active Duty"><b>Active Duty</b><span>Full-time service, stationed wherever the Army needs you.</span></button>
+          <button class="opt" data-v="Army National Guard"><b>National Guard</b><span>Part-time service in your state, with both state and federal missions.</span></button>
+          <button class="opt" data-v="Army Reserve"><b>Army Reserve</b><span>Part-time federal service while pursuing a civilian career.</span></button>
+        </div>
+      </div>
+      <div class="card">
+        <p class="qlabel">CAREER TIMELINE</p>
+        <div class="yrs"><input type="range" id="years" min="4" max="30" value="8" aria-label="Years of service"><output id="yearsOut" for="years"></output></div>
+        <div class="tl" id="tl" aria-hidden="true"></div>
+        <ul class="mlist" id="mlist"></ul>
+        <p class="fine">Promotion timing is typical, not guaranteed, and depends on performance and Army needs. ROTC graduates generally owe eight years of total service, part on active duty or in a drilling unit and the rest in the Reserve. Scholarship and non-scholarship obligations differ, so confirm the details with your Professor of Military Science.</p>
+      </div>
+      <div class="nextrow"><button class="btn" data-next="2">Next: Branch</button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="panel" id="p2" role="tabpanel" hidden>
+      <h3>2. Branch of service and occupation specialty</h3>
+      <p class="lead">Explore the Army's officer branches, then select your branch and a specialty (AOC). This tool covers the Army. If you're considering another service, note it in your reflections in step 5.</p>
+      <div class="bx">
+        <aside class="bmenu" aria-label="Branch menu">
+          <div class="bmhead"><span class="mono" id="bcount"></span><button class="sort" id="bsort" aria-label="Reverse sort order">A&ndash;Z &#8595;</button></div>
+          <input class="search" id="bq" type="search" placeholder="Filter: cyber, 35D, helicopter" aria-label="Filter branches">
+          <div class="blist" id="blist" role="list"></div>
+        </aside>
+        <div>
+          <div class="bph" id="bph"><span class="mono" style="color:var(--tan)">// NO BRANCH SELECTED</span><p style="margin:8px 0 0">Choose a branch from the menu to load its details.</p></div>
+          <div class="bdet" id="bdet" hidden tabindex="-1"></div>
+        </div>
+      </div>
+      <div class="nextrow" style="margin-top:14px"><button class="btn ghost" data-next="1">Back</button><button class="btn" data-next="3">Next: School</button></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="panel" id="p3" role="tabpanel" hidden>
+      <h3>3. School and Senior ROTC program of choice</h3>
+      <p class="lead">Compare up to three colleges. Set how much each factor matters to you, rate each school, and see which one comes out on top.</p>
+      <div class="card">
+        <p class="qlabel">SCHOOLS I'M CONSIDERING</p>
+        <div class="sgrid" id="snames"></div>
+      </div>
+      <div class="card">
+        <p class="qlabel">HOW MUCH EACH FACTOR MATTERS (1 = LITTLE, 5 = A LOT)</p>
+        <div class="weights" id="weights"></div>
+      </div>
+      <div class="card">
+        <p class="qlabel">RATE EACH SCHOOL (1 = POOR, 5 = EXCELLENT)</p>
+        <div class="sgrid" id="ratings"></div>
+      </div>
+      <div class="card">
+        <p class="qlabel">RESULTS</p>
+        <div class="results" id="results"></div>
+      </div>
+      <div class="card">
+        <p class="qlabel">HOW I'LL ATTEND ROTC</p>
+        <div class="opts" data-key="rotcType">
+          <button class="opt" data-v="Host program on my campus"><b>Host program</b><span>The school has its own ROTC battalion on campus.</span></button>
+          <button class="opt" data-v="Partnership program at a nearby host school"><b>Partnership</b><span>My school partners with a nearby host battalion, and I travel there for ROTC.</span></button>
+          <button class="opt" data-v="Not decided yet"><b>Not sure yet</b><span>I'll ask the ROTC recruiting officer at each school.</span></button>
+        </div>
+        <p class="fine">Ask each program about scholarship options (4-, 3-, and 2-year scholarships exist), the Simultaneous Membership Program for Guard and Reserve cadets, and how many cadets commission each year.</p>
+      </div>
+      <div class="nextrow"><button class="btn ghost" data-next="2">Back</button><button class="btn" data-next="4">Next: Major</button></div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="panel" id="p4" role="tabpanel" hidden>
+      <h3>4. Academic major and highest degree desired</h3>
+      <p class="lead">Every officer needs a bachelor's degree, and almost any major can lead to a commission. Some majors line up especially well with certain branches.</p>
+      <div class="card">
+        <p class="qlabel">MY INTENDED MAJOR</p>
+        <div class="chips" id="majors"></div>
+        <div id="majorOut"></div>
+      </div>
+      <div class="card">
+        <p class="qlabel">HIGHEST DEGREE I WANT TO EARN</p>
+        <div class="ladder opts" data-key="degree">
+          <button class="opt" data-v="Bachelor's degree"><b>Bachelor's</b><span>Required to commission. Earned during ROTC.</span></button>
+          <button class="opt" data-v="Master's degree"><b>Master's</b><span>Common among field-grade officers. The Army offers programs that can help pay for it.</span></button>
+          <button class="opt" data-v="Doctorate or professional degree"><b>Doctorate or professional</b><span>Ph.D., law (J.D.), or medical (M.D.) degrees, for some branches or later in a career.</span></button>
+        </div>
+      </div>
+      <div class="nextrow"><button class="btn ghost" data-next="3">Back</button><button class="btn" data-next="5">Next: Build my plan</button></div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="panel" id="p5" role="tabpanel" hidden>
+      <h3>5. My Pathfinder plan</h3>
+      <p class="lead noprint">Review your choices, answer the reflection questions, and build an outline. Use the outline to write your Pathfinder paper in your own words.</p>
+      <div class="card noprint">
+        <p class="qlabel">CADET NAME</p>
+        <input class="txt" id="cname" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="card noprint">
+        <p class="qlabel">MY SELECTIONS</p>
+        <div class="summary" id="summary"></div>
+      </div>
+      <div class="card noprint">
+        <p class="qlabel">REFLECTIONS</p>
+        <div class="refl" id="refl"></div>
+      </div>
+      <div class="card">
+        <div class="row noprint" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <button class="btn" id="build">Build my outline</button>
+          <button class="btn ghost" id="copy">Copy</button>
+          <button class="btn ghost" id="print">Print</button>
+        </div>
+        <div class="status noprint" id="status" aria-live="polite"></div>
+        <textarea class="txt" id="outline" aria-label="Paper outline" placeholder="Your outline appears here."></textarea>
+      </div>
+      <div class="submit noprint">
+        <button class="btn" id="pfSubmit"></button><small id="pfNote"></small>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="mono">// FIVE STARS CHALLENGE</div>
+    <p>A program of the National Society of Scabbard and Blade. Career information is general guidance for planning. Confirm branch, scholarship, and service details with your JROTC instructors and ROTC recruiting officers.</p>
+  </div>
+</footer>
+
+<script>
+/* ===== CONFIG: paste submission links here when ready ===== */
+const SUBMIT={honor:"",leadership:"",professionalism:"",officership:"",unity:"",pathfinder:""};
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 15,9 22,9.5 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9.5 9,9"/></svg>';
+
+/* ===== saved plan ===== */
+let plan={};
+try{plan=JSON.parse(localStorage.getItem('pathfinderPlan')||'{}')||{}}catch(e){plan={}}
+function save(){try{localStorage.setItem('pathfinderPlan',JSON.stringify(plan))}catch(e){} markSteps()}
+
+/* ===== stars ===== */
+const STARS=[
+ {id:"honor",n:"Honor",ord:"FIRST STAR",
+  task:"Write a paper or create a video describing what honor in the military means to you.",
+  v:[["fQqh-_gYZQY","What Is Your Definition of Honor? (Lee Ellis)"],["m5TF9U-Bc64","What Is Honor?"]]},
+ {id:"leadership",n:"Leadership",ord:"SECOND STAR",
+  task:"Organize and execute a company training event or a community service project conducted by cadets, or develop a company leader education plan proposal.",
+  v:[["_rngS2Kov6E","What Makes a Great Military Leader"],["3EYU3VTI3IU","Leadership Lessons from Gen. James Mattis (Ret.)"]]},
+ {id:"professionalism",n:"Professionalism",ord:"THIRD STAR",
+  task:"Create a video interview of one or more military veterans discussing professionalism in the military, or write a paper describing military professionalism and comparing it to the medical and legal professions.",
+  v:[["Xypgo6sb51g","General Dempsey Reflects: The Profession of Arms"],["gugC5nBpvrI","The Army Profession"]]},
+ {id:"officership",n:"Officership",ord:"FOURTH STAR",
+  task:"Arrange a guest speaker event about experiences as an officer, or find a mentor and write a paper about what you learned.",
+  v:[["DTeVrJfqNG0","How to Become a Military Officer"],["jQvnCKLB_TU","U.S. Army Soldiers on the Road to Officership"]]},
+ {id:"unity",n:"Unity",ord:"FIFTH STAR",
+  task:"Write a paper or create a video featuring interviews describing how greater unity in Scabbard and Blade can be achieved.",
+  v:[["RiMYRz9A_yU","Learning Lessons of Unity from the Military"],["zP9jpxitfb4","What Makes the Highest Performing Teams in the World (Simon Sinek)"]]}
+];
+document.getElementById('starrow').innerHTML=STARS.map(()=>STAR).join('');
+function submitBtn(id){
+  const url=SUBMIT[id];
+  return url?`<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Submit project</a><small>Opens the submission form in a new tab.</small>`
+            :`<button class="btn" disabled>Submit project</button><small>Submission link coming soon.</small>`;
+}
+document.getElementById('starList').innerHTML=STARS.map((s,i)=>`
+ <article class="star" id="star-${s.id}">
+  <button class="shead" aria-expanded="false" aria-controls="sb-${s.id}">${STAR}
+   <span class="st"><span class="k">${s.ord}</span><span class="n">${esc(s.n)}</span></span><span class="chev" aria-hidden="true">+</span></button>
+  <div class="sbody" id="sb-${s.id}" hidden>
+   <div class="task"><b>PROJECT</b>Watch both videos, then: ${esc(s.task)}</div>
+   <div class="vids">${s.v.map(([id,t])=>`<div>
+     <div class="vframe"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy">
+      <button data-yt="${id}" aria-label="Play video: ${esc(t)}"><span class="play"></span></button></div>
+     <div class="vmeta"><span>${esc(t)}</span><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">YouTube ↗</a></div></div>`).join('')}</div>
+   <div class="submit">${submitBtn(s.id)}</div>
+  </div>
+ </article>`).join('');
+document.getElementById('starList').addEventListener('click',e=>{
+  const yt=e.target.closest('[data-yt]');
+  if(yt){const id=yt.dataset.yt,f=yt.parentElement;
+    f.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0" title="${esc(yt.getAttribute('aria-label').replace('Play video: ',''))}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;return}
+  const h=e.target.closest('.shead');if(!h)return;
+  const art=h.parentElement,body=art.querySelector('.sbody'),open=h.getAttribute('aria-expanded')!=='true';
+  h.setAttribute('aria-expanded',open);body.hidden=!open;art.classList.toggle('open',open);
+  h.querySelector('.chev').textContent=open?'−':'+';
+});
+
+/* ===== steps ===== */
+const STEPS=[["STEP 1","Service goal"],["STEP 2","Branch"],["STEP 3","School"],["STEP 4","Major"],["STEP 5","My plan"]];
+const stepsEl=document.getElementById('steps');
+stepsEl.innerHTML=STEPS.map((s,i)=>`<button role="tab" data-step="${i+1}" aria-controls="p${i+1}" aria-selected="${i===0}"><span class="k">${s[0]}</span><span class="n">${s[1]}</span></button>`).join('');
+function goStep(n,scroll){
+  [...stepsEl.children].forEach(b=>b.setAttribute('aria-selected',b.dataset.step==n));
+  for(let i=1;i<=5;i++)document.getElementById('p'+i).hidden=i!=n;
+  if(n==5)renderPlan();
+  if(scroll)stepsEl.scrollIntoView({block:'start'});
+}
+function markSteps(){
+  const d=[plan.goal&&plan.component,plan.branch,plan.school,plan.major&&plan.degree,false];
+  [...stepsEl.children].forEach((b,i)=>b.classList.toggle('done',!!d[i]));
+}
+stepsEl.addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)goStep(+b.dataset.step)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-next]');if(b)goStep(+b.dataset.next,true)});
+document.querySelector('[data-go="5"]').addEventListener('click',()=>goStep(5));
+
+/* generic option groups */
+function syncOpts(){document.querySelectorAll('.opts[data-key]').forEach(g=>{const k=g.dataset.key;
+  g.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed',plan[k]===o.dataset.v))})}
+document.querySelectorAll('.opts[data-key]').forEach(g=>g.addEventListener('click',e=>{
+  const o=e.target.closest('.opt');if(!o)return;plan[g.dataset.key]=o.dataset.v;syncOpts();save();
+}));
+
+/* ===== step 1 timeline ===== */
+const RANKS=[[0,"2LT","Second lieutenant: commission, attend your branch's Basic Officer Leader Course, lead a platoon"],
+ [2,"1LT","First lieutenant: platoon leader, executive officer, or staff officer"],
+ [4,"CPT","Captain: career course, then company command and staff positions"],
+ [10,"MAJ","Major: intermediate-level education, battalion or brigade operations and executive officer roles"],
+ [16,"LTC","Lieutenant colonel: battalion command for selected officers, senior staff"],
+ [22,"COL","Colonel: brigade command for selected officers, senior leadership"]];
+const yr=document.getElementById('years');
+if(plan.years)yr.value=plan.years;
+document.getElementById('tl').innerHTML='<div class="track"></div><div class="fill" id="tlfill"></div>'+
+  RANKS.map(r=>`<div class="mk" data-y="${r[0]}" style="left:${r[0]/30*100}%">${r[1]}</div>`).join('')+
+  `<div class="mk ret" data-y="20" style="left:${20/30*100}%;top:36px">20</div>`;
+function drawYears(){
+  const y=+yr.value;plan.years=y;
+  document.getElementById('yearsOut').textContent=`${y} YRS`;
+  document.getElementById('tlfill').style.width=(y/30*100)+'%';
+  document.querySelectorAll('#tl .mk:not(.ret)').forEach(m=>m.classList.toggle('on',+m.dataset.y<=y));
+  document.getElementById('mlist').innerHTML=RANKS.map(r=>`<li class="${r[0]<=y?'on':''}"><b>${r[1]}</b><span>~Year ${r[0]}. ${esc(r[2])}</span></li>`).join('')+
+    `<li class="${y>=20?'on':''}"><b>RET</b><span>Year 20. Eligible for military retirement.</span></li>`;
+}
+yr.addEventListener('input',()=>{drawYears();save()});
+
+/* ===== step 2 branch explorer ===== */
+const CATS=[
+ {id:"mfe",name:"Maneuver, Fires & Effects",lead:"Branches that close with the enemy, deliver fires, and shape the battlefield."},
+ {id:"os",name:"Operations Support",lead:"Branches that provide intelligence, communications, cyber, and security so the force can operate."},
+ {id:"fs",name:"Force Sustainment",lead:"Branches that keep the Army supplied, paid, moving, manned, and medically supported."},
+ {id:"sp",name:"Special Branches",lead:"Professional branches that require a specific degree or license, such as nursing, law, or medicine."}
+];
+/* cat, name, code, colors, tag, school, summary, lieutenant duties, AOCs [[code,title,desc]] */
+const B=[
+ ["mfe","Infantry","IN · 11","#7DB4E0","#7DB4E0","Accession","Fort Benning, GA",
+  "The Infantry closes with and destroys the enemy by fire and maneuver. It is the core of the Army's ground combat power.",
+  "Lead a rifle platoon of about 40 Soldiers in light, airborne, air assault, Stryker, or mechanized units.",
+  [["11A","Infantry officer","Leads infantry platoons and companies and later plans operations on battalion and brigade staffs."]]],
+ ["mfe","Armor","AR · 19","#F2C300","#F2C300","Accession","Fort Benning, GA",
+  "Armor combines tanks and cavalry to deliver mobile, protected firepower and to conduct reconnaissance and security.",
+  "Lead a tank platoon of four M1 Abrams or a cavalry scout platoon.",
+  [["19A","Armor, general","Branch-wide positions for senior Armor officers."],
+   ["19B","Armor officer","Leads tank platoons and companies in armored formations."],
+   ["19C","Cavalry officer","Leads reconnaissance and security units, finding the enemy and protecting the main body."]]],
+ ["mfe","Field Artillery","FA · 13","#C8102E","#C8102E","Accession","Fort Sill, OK",
+  "Field Artillery delivers cannon, rocket, and missile fires and integrates all fires, including air and naval, into the maneuver plan.",
+  "Serve as a fire direction officer, platoon leader on a firing battery, or fire support officer embedded with a maneuver company.",
+  [["13A","Field Artillery officer","Plans, coordinates, and delivers indirect fires, from howitzers to HIMARS rocket systems."]]],
+ ["mfe","Air Defense Artillery","ADA · 14","#C8102E","#C8102E","Accession","Fort Sill, OK",
+  "Air Defense Artillery protects forces and critical assets from aircraft, missiles, rockets, and drones.",
+  "Lead a Patriot or short-range air defense platoon and manage radars, launchers, and fire control systems.",
+  [["14A","Air Defense Artillery officer","General ADA positions across air and missile defense units."],
+   ["14B","Short-Range Air Defense officer","Protects maneuver forces from drones, helicopters, and low-flying threats."],
+   ["14E","Patriot officer","Employs the Patriot system against aircraft and ballistic and cruise missiles."]]],
+ ["mfe","Aviation","AV · 15","#1F3F9E","#F5A623","Accession","Fort Rucker, AL",
+  "Army Aviation flies attack, lift, and reconnaissance missions in support of ground forces. New aviation officers attend flight school.",
+  "Fly as a pilot in AH-64 Apache, UH-60 Black Hawk, or CH-47 Chinook units, then lead an aviation platoon.",
+  [["15A","Aviation, general","Branch-wide aviation leadership and staff positions."],
+   ["15B","Aviation combined arms operations","Plans and leads aviation operations integrated with ground maneuver."],
+   ["15D","Aviation maintenance officer","Manages aircraft maintenance, safety, and readiness."]]],
+ ["mfe","Engineers","EN · 12","#C8102E","#FFFFFF","Accession","Fort Leonard Wood, MO",
+  "Engineers provide mobility, countermobility, and survivability: breaching obstacles, building defenses, bridging gaps, and constructing infrastructure.",
+  "Lead a sapper, route clearance, bridge, or construction platoon.",
+  [["12A","Engineer, general","Branch-wide engineer positions for senior officers."],
+   ["12B","Combat engineer","Leads combat engineer units that breach, clear, and build obstacles alongside maneuver forces."],
+   ["12D","Facilities and construction engineer","Manages construction, contracting, and facilities projects."]]],
+ ["mfe","Chemical (CBRN)","CM · 74","#0047AB","#F2C300","Accession","Fort Leonard Wood, MO",
+  "The Chemical Corps defends the force against chemical, biological, radiological, and nuclear threats.",
+  "Lead a CBRN reconnaissance or decontamination platoon, or serve as a CBRN officer on a battalion staff.",
+  [["74A","CBRN officer","Plans CBRN defense, detection, and decontamination, and advises commanders on hazards."]]],
+ ["mfe","Special Forces","SF · 18","#29523C","#29523C","Later in career","Fort Bragg, NC",
+  "Special Forces conduct unconventional warfare, foreign internal defense, and direct action, usually alongside partner forces.",
+  "Not available at commissioning. Officers apply after about three years in another branch and complete the SF Qualification Course.",
+  [["18A","Special Forces officer","Leads a 12-man Operational Detachment Alpha (ODA)."]]],
+ ["mfe","Civil Affairs","CA · 38","#5B2C83","#FFFFFF","Later in career","Fort Bragg, NC",
+  "Civil Affairs works with civilian populations and governments to support military operations.",
+  "Not available at commissioning. Officers transfer in from another branch as captains.",
+  [["38A","Civil Affairs officer","Assesses civil conditions and coordinates with local authorities and organizations."]]],
+ ["mfe","Psychological Operations","PO · 37","#1E5631","#A7A9AC","Later in career","Fort Bragg, NC",
+  "Psychological Operations influences the attitudes and behavior of foreign audiences in support of objectives.",
+  "Not available at commissioning. Officers transfer in from another branch as captains.",
+  [["37A","PSYOP officer","Plans and leads influence operations and messaging."]]],
+
+ ["os","Military Intelligence","MI · 35","#5B8DB8","#A7A9AC","Accession","Fort Huachuca, AZ",
+  "Military Intelligence collects, analyzes, and delivers information about the enemy and the operating environment to commanders.",
+  "Serve as a battalion intelligence officer (S2) or lead a collection platoon.",
+  [["35D","All-source intelligence","Fuses every intelligence discipline into assessments for commanders."],
+   ["35E","Counterintelligence","Detects and counters foreign intelligence threats against the Army."],
+   ["35F","Human intelligence","Collects intelligence from people through interrogation and source operations."],
+   ["35G","Signals intelligence","Collects and analyzes signals, working closely with EW and cyber teams."]]],
+ ["os","Signal Corps","SC · 25","#F26522","#FFFFFF","Accession","Fort Gordon, GA",
+  "The Signal Corps builds and defends the Army's networks, radios, and satellite links from the tactical edge to the strategic level.",
+  "Lead a network extension or tactical communications platoon, or serve as a battalion signal officer (S6).",
+  [["25A","Signal officer","Plans, installs, and manages communications networks and systems."]]],
+ ["os","Cyber","CY · 17","#1B2A4A","#A7A9AC","Accession","Fort Gordon, GA",
+  "The Cyber branch conducts offensive and defensive operations in cyberspace and the electromagnetic spectrum.",
+  "Lead a cyber team, plan cyberspace effects, or serve as a brigade electromagnetic warfare officer.",
+  [["17A","Cyber operations officer","Plans and leads defensive and offensive cyberspace operations."],
+   ["17B","Cyber electromagnetic warfare officer","Integrates electromagnetic warfare: detecting, jamming, and protecting against enemy emitters."],
+   ["17D","Cyber capabilities development officer","Develops software and tools that enable cyber operations."]]],
+ ["os","Military Police","MP · 31","#00843D","#F2C300","Accession","Fort Leonard Wood, MO",
+  "Military Police provide security, law enforcement, detention operations, and mobility support on the battlefield and at home station.",
+  "Lead an MP platoon conducting area security, route security, or law enforcement operations.",
+  [["31A","Military Police officer","Leads police, security, and detention operations."]]],
+
+ ["fs","Adjutant General","AG · 42","#1B2A4A","#C8102E","Accession","Fort Jackson, SC",
+  "The Adjutant General's Corps manages the Army's people: personnel readiness, casualty reporting, postal operations, and Army bands.",
+  "Serve as a battalion personnel officer (S1) or lead an HR platoon.",
+  [["42B","Human resources officer","Manages personnel accountability, strength reporting, and Soldier actions."]]],
+ ["fs","Finance","FI · 36","#A7A9AC","#F2C300","Accession","Fort Jackson, SC",
+  "The Finance Corps pays Soldiers, funds operations, and manages budgets.",
+  "Lead a financial management support detachment or serve as a resource manager.",
+  [["36A","Financial management officer","Manages funds, budgets, disbursing, and audits."]]],
+ ["fs","Ordnance","OD · 91","#9B1B30","#F2C300","Accession","Fort Lee, VA",
+  "The Ordnance Corps maintains weapons, vehicles, and equipment, manages ammunition, and disposes of explosive hazards.",
+  "Lead a maintenance platoon or an ammunition platoon. EOD officers lead bomb disposal teams.",
+  [["91A","Ordnance officer","Leads maintenance and munitions units that keep equipment ready to fight."],
+   ["89E","Explosive ordnance disposal officer","Leads EOD teams that locate, render safe, and dispose of explosives."]]],
+ ["fs","Quartermaster","QM · 92","#C9A66B","#C9A66B","Accession","Fort Lee, VA",
+  "The Quartermaster Corps supplies the Army with food, fuel, water, parts, and field services, including aerial delivery.",
+  "Lead a supply, fuel, or distribution platoon, or serve as a battalion logistics officer (S4).",
+  [["92A","Quartermaster officer","Manages supply, fuel, water, and field services."],
+   ["92D","Aerial delivery officer","Leads parachute rigging and airdrop resupply."]]],
+ ["fs","Transportation","TC · 88","#9C3B2E","#F2C300","Accession","Fort Lee, VA",
+  "The Transportation Corps moves people and equipment by truck, rail, sea, and air.",
+  "Lead a truck platoon or a movement control team.",
+  [["88A","Transportation officer","Plans and leads the movement of personnel and cargo."]]],
+ ["fs","Medical Service Corps","MS · 70","#7A1F2B","#FFFFFF","Accession","JBSA Fort Sam Houston, TX",
+  "The Medical Service Corps runs the business and operations side of Army medicine and includes many scientific and clinical specialties.",
+  "Lead a medical platoon, a treatment team, or an evacuation platoon, or serve as a battalion medical operations officer.",
+  [["70B","Health services administration","The usual entry AOC: medical platoon leader and medical operations positions."],
+   ["67J","Aeromedical evacuation officer","Flies MEDEVAC helicopters to evacuate casualties."]]],
+ ["fs","Logistics","LG · 90","#9B1B30","#C9A66B","Later in career","Fort Lee, VA",
+  "Multifunctional logisticians plan and lead sustainment across ordnance, quartermaster, and transportation functions.",
+  "Officers from Ordnance, Quartermaster, and Transportation become Logistics officers as captains.",
+  [["90A","Logistics officer","Plans and synchronizes all sustainment functions for large units."]]],
+
+ ["sp","Army Nurse Corps","AN · 66","#7A1F2B","#FFFFFF","Degree required","JBSA Fort Sam Houston, TX",
+  "Army nurses provide care across hospitals, field medical units, and aeromedical settings.",
+  "Nursing students in ROTC commission as Nurse Corps officers after earning a BSN and passing the NCLEX.",
+  [["66H","Medical-surgical nurse","The most common first assignment for new Army nurses."],
+   ["66T","Emergency nurse","Provides emergency and trauma care."]]],
+ ["sp","Judge Advocate General","JA · 27","#1B2A4A","#FFFFFF","Degree required","Charlottesville, VA",
+  "Judge advocates are the Army's attorneys, covering military justice, operational law, and legal assistance.",
+  "Cadets can request an educational delay to attend law school, then join after passing a bar exam.",
+  [["27A","Judge advocate","Prosecutes, defends, and advises commanders on legal matters."]]],
+ ["sp","Medical Corps","MC · 60–62","#7A1F2B","#FFFFFF","Degree required","JBSA Fort Sam Houston, TX",
+  "Army physicians care for Soldiers in clinics, hospitals, and deployed units.",
+  "Cadets can request an educational delay for medical school, often with a scholarship program.",
+  [["61N","Flight surgeon","Cares for aviators and aircrew."],
+   ["62B","Field surgeon","Provides primary care to Soldiers in operational units."]]],
+ ["sp","Chaplain Corps","CH · 56","#1C1C1C","#1C1C1C","Degree required","Fort Jackson, SC",
+  "Chaplains provide religious support and counsel to Soldiers and families.",
+  "Requires a graduate theological degree and endorsement from a faith group. Seminary students can join as chaplain candidates.",
+  [["56A","Chaplain","Provides worship, counseling, and moral advice to commanders."]]]
+];
+let bOpen=null,bAsc=true;
+const blist=document.getElementById('blist'),bdet=document.getElementById('bdet'),bph=document.getElementById('bph'),bq=document.getElementById('bq'),bsort=document.getElementById('bsort');
+const catName=id=>CATS.find(c=>c.id===id).name;
+bq.addEventListener('input',renderBranches);
+bsort.addEventListener('click',()=>{bAsc=!bAsc;bsort.innerHTML=bAsc?'A&ndash;Z &#8595;':'Z&ndash;A &#8593;';renderBranches()});
+function renderBranches(){
+  const t=bq.value.trim().toLowerCase();
+  const rows=B.map((b,i)=>[b,i]).filter(([b])=>!t||[b[1],b[2],catName(b[0]),b[7],b[8],...b[9].flat()].join(' ').toLowerCase().includes(t))
+    .sort((x,y)=>bAsc?x[0][1].localeCompare(y[0][1]):y[0][1].localeCompare(x[0][1]));
+  document.getElementById('bcount').textContent=`BRANCHES [${rows.length}]`;
+  blist.innerHTML=rows.length?rows.map(([b,i])=>`<button class="br" role="listitem" data-i="${i}" aria-current="${bOpen===i}" style="--c1:${b[3]};--c2:${b[4]}">
+    ${plan.branch===b[1]?'<span class="pick">MY BRANCH</span>':''}
+    <span class="name">${esc(b[1])}</span><span class="code">${esc(b[2])} · ${esc(catName(b[0]))}</span>
+    ${b[5]!=="Accession"?`<span class="tag">${esc(b[5])}</span>`:''}</button>`).join(''):'<p style="color:var(--dim)">No branch matches that filter.</p>';
+  renderBranchDetail();
+}
+function renderBranchDetail(){
+  if(bOpen===null){bdet.hidden=true;bph.hidden=false;return}
+  const b=B[bOpen],mine=plan.branch===b[1];
+  bdet.style.setProperty('--c1',b[3]);bdet.style.setProperty('--c2',b[4]);
+  const avail={"Accession":"Available at commissioning","Later in career":"Transfer in after initial service","Degree required":"Requires a professional degree"}[b[5]];
+  bdet.innerHTML=`<div class="dhead"><div class="stripe"></div><div class="t"><h3 class="cond">${esc(b[1])}</h3><div class="sub">${esc(b[2])} // ${esc(catName(b[0]))}</div></div></div>
+   <div class="dbody"><p>${esc(b[7])}</p>
+   <div class="facts"><div class="fact"><b>AS A LIEUTENANT</b>${esc(b[8])}</div><div class="fact"><b>HOW YOU GET IN</b>${avail}</div><div class="fact"><b>BRANCH SCHOOL</b>${esc(b[6])}</div></div>
+   <h4>Officer specialties (AOCs)</h4>
+   ${b[9].map(a=>{const sel=mine&&plan.aoc===a[0]+' '+a[1];return `<div class="aoc"><div class="ac"><b><span>${esc(a[0])}</span>${esc(a[1])}</b><p>${esc(a[2])}</p></div>
+     <button class="btn sm ${sel?'':'ghost'}" data-aoc="${esc(a[0]+' '+a[1])}" aria-pressed="${sel}">${sel?'Selected':'Choose'}</button></div>`}).join('')}
+   <div class="selrow"><button class="btn ${mine?'':'ghost'}" id="pickBranch">${mine?'✓ My branch':'Select as my branch'}</button>
+   <small style="color:var(--dim)">${mine?'Choose an AOC above to complete this step.':'Choosing an AOC also selects this branch.'}</small></div></div>`;
+  bdet.hidden=false;bph.hidden=true;
+}
+function setBranch(name,aoc){if(plan.branch!==name){plan.branch=name;plan.aoc=''}if(aoc!==undefined)plan.aoc=aoc;save();renderBranches()}
+bdet.addEventListener('click',e=>{
+  if(e.target.closest('#pickBranch'))setBranch(B[bOpen][1]);
+  const a=e.target.closest('[data-aoc]');if(a)setBranch(B[bOpen][1],a.dataset.aoc);
+});
+function openBranch(i,scroll){
+  bOpen=i;renderBranches();bdet.focus({preventScroll:true});
+  if(scroll||matchMedia('(max-width:760px)').matches)bdet.scrollIntoView({block:'start'});
+}
+blist.addEventListener('click',e=>{const b=e.target.closest('.br');if(b)openBranch(+b.dataset.i)});
+
+/* ===== step 3 schools ===== */
+const CRIT=["Offers my intended major","Cost and scholarship options","Location and distance from home","ROTC program strength","Campus life and fit"];
+plan.schools=plan.schools||["","",""];
+plan.weights=plan.weights||[5,4,3,4,3];
+plan.ratings=plan.ratings||[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+document.getElementById('snames').innerHTML=[0,1,2].map(i=>`<input class="txt" data-s="${i}" placeholder="School ${i+1}" value="${esc(plan.schools[i])}" aria-label="School ${i+1} name">`).join('');
+document.getElementById('weights').innerHTML=CRIT.map((c,i)=>`<label>${esc(c)}<input type="range" min="1" max="5" data-w="${i}" value="${plan.weights[i]}" aria-label="${esc(c)} importance"><output>${plan.weights[i]}</output></label>`).join('');
+document.getElementById('snames').addEventListener('input',e=>{const i=e.target.dataset.s;if(i===undefined)return;plan.schools[i]=e.target.value;renderRatings();save()});
+document.getElementById('weights').addEventListener('input',e=>{const i=e.target.dataset.w;if(i===undefined)return;plan.weights[i]=+e.target.value;e.target.nextElementSibling.textContent=e.target.value;renderResults();save()});
+function renderRatings(){
+  const names=plan.schools.map((s,i)=>s.trim()||`School ${i+1}`);
+  document.getElementById('ratings').innerHTML=[0,1,2].map(i=>`<div class="rate"><b class="cond" style="font-size:1.15rem">${esc(names[i])}</b>
+   ${CRIT.map((c,j)=>`<div class="rrow"><span>${esc(c)}</span><div class="seg" role="group" aria-label="${esc(names[i])}: ${esc(c)}">
+     ${[1,2,3,4,5].map(v=>`<button data-r="${i},${j},${v}" aria-pressed="${plan.ratings[i][j]===v}">${v}</button>`).join('')}</div></div>`).join('')}</div>`).join('');
+  renderResults();
+}
+document.getElementById('ratings').addEventListener('click',e=>{const b=e.target.closest('[data-r]');if(!b)return;
+  const[i,j,v]=b.dataset.r.split(',').map(Number);plan.ratings[i][j]=v;save();
+  b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderResults()});
+function renderResults(){
+  const max=plan.weights.reduce((a,w)=>a+w*5,0);
+  const rows=[0,1,2].map(i=>{const rated=plan.ratings[i].filter(Boolean).length;
+    return{i,name:plan.schools[i].trim(),rated,score:plan.ratings[i].reduce((a,r,j)=>a+r*plan.weights[j],0)}})
+    .filter(r=>r.name&&r.rated).sort((a,b)=>b.score-a.score);
+  const el=document.getElementById('results');
+  if(!rows.length){el.innerHTML='<p class="fine" style="margin:0">Name at least one school and rate it to see results.</p>';return}
+  el.innerHTML=rows.map((r,k)=>`<div class="res ${k===0?'top':''}"><div><b>${esc(r.name)}</b>
+     <span class="sc"> ${Math.round(r.score/max*100)}%</span>${r.rated<5?` <small style="color:var(--orange)">(${5-r.rated} unrated)</small>`:''}</div>
+     <button class="btn sm ${plan.school===r.name?'':'ghost'}" data-choose="${esc(r.name)}">${plan.school===r.name?'✓ My choice':'Make my choice'}</button>
+     <div class="bar"><i style="width:${r.score/max*100}%"></i></div></div>`).join('');
+}
+document.getElementById('results').addEventListener('click',e=>{const b=e.target.closest('[data-choose]');if(!b)return;plan.school=b.dataset.choose;save();renderResults()});
+
+/* ===== step 4 majors ===== */
+const MAJORS=[
+ ["Computer science or IT",["Cyber","Signal Corps","Military Intelligence"],"Cyber strongly favors technical degrees. Signal and MI also value them."],
+ ["Engineering",["Engineers","Signal Corps","Aviation","Chemical (CBRN)"],"Engineering degrees fit the Engineer branch directly and are valued across technical branches."],
+ ["Nursing",["Army Nurse Corps"],"A BSN and a nursing license lead to a commission in the Army Nurse Corps."],
+ ["Biology or pre-med",["Medical Service Corps","Medical Corps","Chemical (CBRN)"],"Science majors fit Army medicine, and pre-med students can seek an educational delay for medical school."],
+ ["Chemistry",["Chemical (CBRN)","Medical Service Corps","Ordnance"],"Chemistry supports CBRN defense, medical science, and explosive ordnance work."],
+ ["Business, economics, or accounting",["Finance","Adjutant General","Quartermaster","Transportation"],"Business skills transfer directly to finance, personnel, and logistics branches."],
+ ["Supply chain or logistics",["Quartermaster","Transportation","Ordnance","Logistics"],"Logistics majors align with the sustainment branches."],
+ ["Criminal justice",["Military Police","Military Intelligence"],"Criminal justice fits law enforcement and investigative work."],
+ ["Political science, history, or international relations",["Military Intelligence","Infantry","Civil Affairs","Judge Advocate General"],"These majors build analysis and regional understanding. Pre-law students can pursue JAG after law school."],
+ ["Psychology",["Adjutant General","Psychological Operations","Medical Service Corps"],"Psychology supports personnel work, influence operations, and behavioral health roles."],
+ ["Kinesiology or exercise science",["Infantry","Armor","Medical Service Corps"],"Fitness knowledge helps in physically demanding branches and in health roles."],
+ ["Other or undecided",["Infantry","Armor","Field Artillery","Air Defense Artillery","Aviation"],"Combat arms branches accept graduates of every major. Your GPA, fitness, and leadership count most."]
+];
+const majorsEl=document.getElementById('majors');
+majorsEl.innerHTML=MAJORS.map((m,i)=>`<button class="chip" data-m="${i}" aria-pressed="${plan.major===m[0]}">${esc(m[0])}</button>`).join('');
+function renderMajor(){
+  majorsEl.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',plan.major===MAJORS[+c.dataset.m][0]));
+  const m=MAJORS.find(x=>x[0]===plan.major),out=document.getElementById('majorOut');
+  if(!m){out.innerHTML='';return}
+  out.innerHTML=`<h4>Branches that align with ${esc(m[0].toLowerCase())}</h4><div class="chips">${m[1].map(n=>`<button class="chip link" data-bn="${esc(n)}">${esc(n)}</button>`).join('')}</div>
+   <p class="fine" style="margin-top:10px">${esc(m[2])} Tap a branch to view it in step 2.</p>`;
+}
+majorsEl.addEventListener('click',e=>{const c=e.target.closest('[data-m]');if(!c)return;plan.major=MAJORS[+c.dataset.m][0];save();renderMajor()});
+document.getElementById('majorOut').addEventListener('click',e=>{const c=e.target.closest('[data-bn]');if(!c)return;
+  const i=B.findIndex(b=>b[1]===c.dataset.bn);if(i<0)return;goStep(2,true);bq.value='';openBranch(i,true)});
+
+/* ===== step 5 plan ===== */
+const cname=document.getElementById('cname');cname.value=plan.name||'';
+cname.addEventListener('input',()=>{plan.name=cname.value;save()});
+const REFL=[["r1","Why did you choose this length of service and component?"],["r2","Why does this branch and specialty interest you?"],
+ ["r3","Why is this school and ROTC program the right fit?"],["r4","How will your major and degree goal prepare you to lead?"]];
+plan.refl=plan.refl||{};
+document.getElementById('refl').innerHTML=REFL.map(([k,q])=>`<div><label for="${k}">${esc(q)}</label><textarea class="txt" id="${k}" data-k="${k}">${esc(plan.refl[k]||'')}</textarea></div>`).join('');
+document.getElementById('refl').addEventListener('input',e=>{const k=e.target.dataset.k;if(k){plan.refl[k]=e.target.value;save()}});
+function items(){return[
+ ["Initial goal for military service",plan.goal?`${plan.goal}${plan.component?', '+plan.component:''}`:'',1],
+ ["Branch of service and occupation specialty",plan.branch?`U.S. Army, ${plan.branch}${plan.aoc?' ('+plan.aoc+')':''}`:'',2],
+ ["School and Senior ROTC program of choice",plan.school?`${plan.school}${plan.rotcType?', '+plan.rotcType.toLowerCase():''}`:'',3],
+ ["Academic major and highest degree desired",plan.major?`${plan.major}${plan.degree?', '+plan.degree.toLowerCase():''}`:'',4]]}
+function renderPlan(){
+  document.getElementById('summary').innerHTML=items().map(([l,v,s],i)=>`<div class="srow"><span class="no">0${i+1}</span>
+   <span><span class="lbl">${esc(l.toUpperCase())}</span><span class="val ${v?'':'miss'}">${v?esc(v):'Not selected yet'}</span></span>
+   <button data-next="${s}">Edit</button></div>`).join('');
+}
+document.getElementById('build').onclick=()=>{
+  const it=items(),miss=it.filter(x=>!x[1]).length;
+  const L=[`FIVE STARS PATHFINDER AWARD: CAREER GOALS PAPER OUTLINE`,`Cadet: ${plan.name||'__________'}`,``,
+   `I. Introduction`,`   A. Who I am and why I'm considering military service`,`   B. Thesis: my plan for service, branch, school, and education`,``];
+  const roman=["II","III","IV","V"];
+  it.forEach(([l,v],i)=>{L.push(`${roman[i]}. ${l}`,`   A. My choice: ${v||'(not selected yet)'}`);
+    const r=plan.refl[REFL[i][0]];L.push(`   B. Why: ${r?r.trim().replace(/\s+/g,' '):'(answer the reflection question)'}`,`   C. Supporting details and research`,``)});
+  L.push(`VI. Conclusion`,`   A. How these goals fit together`,`   B. What I'll do next to prepare`);
+  document.getElementById('outline').value=L.join('\n');
+  document.getElementById('status').textContent=miss?`// OUTLINE BUILT. ${miss} ITEM${miss>1?'S':''} STILL MISSING.`:'// OUTLINE BUILT. ALL FOUR ITEMS COMPLETE.';
+};
+document.getElementById('copy').onclick=async()=>{
+  const t=document.getElementById('outline');if(!t.value)document.getElementById('build').click();
+  try{await navigator.clipboard.writeText(t.value);document.getElementById('status').textContent='// COPIED TO CLIPBOARD.'}
+  catch(e){t.select();document.getElementById('status').textContent='// SELECTED. PRESS CTRL+C OR CMD+C TO COPY.'}
+};
+document.getElementById('print').onclick=()=>{if(!document.getElementById('outline').value)document.getElementById('build').click();window.print()};
+(function(){const b=document.getElementById('pfSubmit'),n=document.getElementById('pfNote');
+  if(SUBMIT.pathfinder){b.textContent='Submit Pathfinder paper';b.onclick=()=>window.open(SUBMIT.pathfinder,'_blank','noopener');n.textContent='Opens the submission form in a new tab.'}
+  else{b.textContent='Submit Pathfinder paper';b.disabled=true;n.textContent='Submission link coming soon.'}})();
+
+/* init */
+syncOpts();drawYears();renderBranches();renderRatings();renderMajor();markSteps();
+</script>
+</body>
+</html>
